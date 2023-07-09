@@ -1,0 +1,80 @@
+<div class="container">
+    <mat-card class="background-card">
+      <form
+        [formGroup]="authForm"
+        (ngSubmit)="handleSubmit()"
+        #form="ngForm">
+        <div class="form-group">
+          <h2>{{ isSignUpMode ? 'Sign Up' : 'Log In' }}</h2>
+  
+          <a
+            *ngIf="!isSignUpMode; else signUpLink"
+            routerLink="/auth/sign-up"
+            (click)="isSignUpMode = true"
+            >Need an account?
+          </a>
+  
+          <ng-template #signUpLink>
+            <a
+              (click)="isSignUpMode = false"
+              routerLink="/auth/login">
+              Already have an account?
+            </a>
+          </ng-template>
+  
+          <div
+            *ngIf="error"
+            class="form-error">
+            {{ error }}
+          </div>
+  
+          <input
+            type="text"
+            class="form-control"
+            id="username"
+            name="username"
+            required
+            formControlName="username"
+            placeholder="Username" />
+  
+          <span
+            class="form-error"
+            *ngIf="!authForm.controls['username'].value.length && (authForm.controls['username'].touched || form.submitted)">
+            Enter your username
+          </span>
+  
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            name="password"
+            required
+            formControlName="password"
+            placeholder="Password" />
+  
+          <span
+            class="form-error"
+            *ngIf="
+              (authForm.controls['password'].dirty || authForm.controls['password'].touched || form.submitted) &&
+              authForm.controls['password'].invalid
+            ">
+            Password must be at least 6 characters long
+          </span>
+  
+          <button
+            type="submit"
+            mat-raised-button>
+            {{ isSignUpMode ? 'Sign Up' : 'Log In' }}
+          </button>
+        </div>
+  
+        <mat-card-footer>
+          <mat-progress-bar
+            style="position: absolute; right: 3px; border-radius: 8px; width: 99%"
+            *ngIf="isLoading"
+            mode="indeterminate"></mat-progress-bar>
+        </mat-card-footer>
+      </form>
+    </mat-card>
+  </div>
+  
