@@ -1,0 +1,8 @@
+<div class="container">
+  <div class="users">
+    <chat-app-users [closeDrawer$]="closeDrawer$"></chat-app-users>
+  </div>
+  <div class="messages">
+    <chat-app-messages (closeDrawerEvent)="closeDrawer()"></chat-app-messages>
+  </div>
+</div>

@@ -1,0 +1,68 @@
+<ng-template #usersRef>
+  <div class="container">
+    <div
+      *ngFor="let user of users$ | async"
+      [ngClass]="
+        (!isAdmin && 'user online') || user.online
+          ? 'user online'
+          : 'user offline'
+      "
+      [ngStyle]="{
+        'background-color': user.color,
+        border: authUserId === user.id ? '1px solid yellow' : ''
+      }"
+    >
+      <p>
+        {{ user.username }}
+      </p>
+
+      <div *ngIf="isAdmin" [ngStyle]="{ cursor: 'pointer' }">
+        <mat-icon (click)="unmuteUser(user.id)" *ngIf="user.muted"
+          >volume_off</mat-icon
+        >
+        <mat-icon (click)="muteUser(user.id)" *ngIf="!user.muted"
+          >volume_up</mat-icon
+        >
+        <mat-icon
+          (click)="banUser(user.id)"
+          *ngIf="!user.banned && user.id !== authUserId"
+          >how_to_reg</mat-icon
+        >
+        <mat-icon
+          (click)="unbanUser(user.id)"
+          *ngIf="user.banned && user.id !== authUserId"
+          >report_off</mat-icon
+        >
+      </div>
+
+      <div *ngIf="!isAdmin">
+        <mat-icon *ngIf="user.muted">volume_off</mat-icon>
+        <mat-icon *ngIf="!user.muted">volume_up</mat-icon>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<div class="desktop">
+  <ng-template [ngTemplateOutlet]="usersRef"></ng-template>
+</div>
+
+<div class="mobile">
+  <mat-drawer-container class="drawer-container" autosize>
+    <mat-drawer #drawer class="drawer-sidenav" mode="side">
+      <ng-template [ngTemplateOutlet]="usersRef"></ng-template>
+    </mat-drawer>
+  </mat-drawer-container>
+  <button
+    class="drawer-button"
+    type="button"
+    mat-button
+    (click)="drawer.toggle()"
+  >
+    Users
+  </button>
+</div>
+
+<button class="logout-button" type="button" mat-button (click)="logOut()">
+  Log out
+</button>
